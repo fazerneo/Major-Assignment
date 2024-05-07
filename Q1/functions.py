@@ -5,6 +5,7 @@ def menu():
     ''' This function prints out a menu for the main program and gets user input,
     the user input is then returned for use in the main program '''
     
+    print()
     print("Sales Records Management System\n")
     print("Please select an option below to get started")
     print("1. Load Customer and Sales Records")
@@ -64,13 +65,18 @@ def option1(dictionary):
             dictionary['sales_records'] = sales
             
         else:
+            print()
+            print("Records")
             print(dictionary)
     
     return dictionary
 
 def print_dict(dictionary):
     count = 1
+    print()
+    print("Loaded Records")
     for key, value in dictionary.items():
+        print()
         print(key)
         for inner_key, inner_value in value.items():
             print(inner_value)

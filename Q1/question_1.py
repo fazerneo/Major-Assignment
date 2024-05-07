@@ -8,7 +8,7 @@ while True:
     
     if user_input == 1:
         Loaded_records = option1(Loaded_records)
-        print(Loaded_records)
+        
         print_dict(Loaded_records)
     
     elif user_input == 4:
