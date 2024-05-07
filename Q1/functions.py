@@ -19,7 +19,7 @@ def load_records():
     customers = {}
     sales = {}
                 
-    file1_name = input("please provide the filename or filepath of customer records:")
+    file1_name = input("\nplease provide the filename or filepath of customer records:")
     file2_name = input("please provide the filename or filepath of Sales record:")
 
     with open(file1_name, newline="", encoding="utf-8-sig") as file1, open(file2_name, newline="", encoding="utf-8-sig") as file2:
@@ -47,9 +47,7 @@ def load_records():
     return customers, sales
 
 def option1(dictionary):
-    
-    
-    
+        
     if not dictionary:  
         (customers, sales) = load_records()
         
@@ -58,7 +56,7 @@ def option1(dictionary):
         
         
     else:
-        overwrite = input("The Data Structure holds record currently, do you want to overwrite [Y/N]")
+        overwrite = input("\nThe Data Structure holds record currently, do you want to overwrite [Y/N]")
         if overwrite.upper() == "Y" or overwrite == "":
             (customers, sales) = load_records()
             
