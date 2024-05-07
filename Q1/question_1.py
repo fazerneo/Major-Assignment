@@ -1,4 +1,4 @@
-from functions import menu, other_options
+from functions import menu, option1
 
 Loaded_records = {}
 
@@ -8,7 +8,8 @@ while True:
     if user_input == 4:
         print("\nThank you for using the program")
         break
-    else:
-        other_options(user_input)
+    elif user_input == 1:
+        option1(Loaded_records)
+        
     
     
