@@ -68,3 +68,14 @@ def option1(dictionary):
     
     return dictionary
 
+def print_dict(dictionary):
+    count = 1
+    for key, value in dictionary.items():
+        print(key)
+        for inner_key, inner_value in value.items():
+            print(inner_value)
+            count += 1
+            if count > 7:
+                count = 1
+                break
+    return

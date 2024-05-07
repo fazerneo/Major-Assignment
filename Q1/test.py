@@ -1,11 +1,6 @@
-# Initialize an empty dictionary
-my_dict = {'key': 9}
 
-# Check if the dictionary is empty
-if my_dict:
-    print("no, the dictionary is empty.")
-else:
-    print("yes, the dictionary is not empty.")
+                
 
-    
+dict = {'customer_records': {'a': 1, 'b': 2, 'c': 7, 'd': 6}, 'sales': {'a': 1, 'b': 2, 'c': 9}}
+print_dict(dict)    
     
