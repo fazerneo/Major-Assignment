@@ -2,6 +2,7 @@
 Python Semester 1 major assignment
 
 Question 1 (20%): A simple sales records management system (Back to Beginning)
+
 Western Wholesales Pty Ltd sells variety of products to the re-seller markets. It sells products in the following 6 categories: food, alcohol and beverage, apparel, furniture, household appliances, and computer equipment. Design a program to manage the sale records of the company and implement the program in Python programming language.
 
 These sales records are stored in two CSV files, on for the customer details and the other for the records of sales to these customers.
