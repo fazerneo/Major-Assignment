@@ -16,100 +16,6 @@ def menu():
     
     return user_input
 
-def load_records():
-    ''' This is definitely a long function but I couldnt do it any shorter without creating more functions.
-    This function initializes two dictionaries, gets file names as input, checks for whether the file exists,
-    if the file does not exist then it asks for new file names, then the records in the files are iterated over
-    and sent to dictionaries. This function returns the filled dictionaries. '''
-    
-    customers = {}
-    sales = {}
-
-    file1_name = input("\nplease provide the filename or filepath of customer records:")
-    
-    while True:
-        
-        if "/" not in file1_name or "\\" not in file1_name: # if user enters filename instead of path
-            current_dir = os.getcwd()
-            if "/" in current_dir: # if users are using Linux, Mac or other unix like OS
-                file1_name = current_dir + "/" + file1_name
-                if os.path.exists(file1_name):
-                    break
-                else:
-                    print("\nThe customer records filename or filepath you provided is not valid")
-                    print("Examples of valid filenames or filepaths: \"customers.csv\" or \"Q1 tests/customers.csv\"")
-                    file1_name = input("\nplease provide a valid filename or filepath: ")
-            elif "\\" in current_dir: # if users are using windows
-                file1_name = current_dir + "\\" + file1_name
-                if os.path.exists(file1_name):
-                    break
-                else:
-                    print("\nThe customers record filename or filepath you provided is not valid")
-                    print("Examples of valid filenames or filepaths: \"customers.csv\" or \"Q1 tests/customers.csv\"")
-                    file1_name = input("\nplease provide a valid filename or filepath: ")   
-        
-        else: # if user enters path instead of filename
-            if os.path.exists(file1_name):
-                break
-            else:
-                print("\nThe customers record filename or filepath you provided is not valid")
-                print("Examples of valid filenames or filepaths: \"customers.csv\" or \"Q1 tests/customers.csv\"")
-                file1_name = input("\nplease provide a valid filename or filepath: ")
-
-    file2_name = input("please provide the filename or filepath of Sales record:")    
-    
-    while True:
-        
-        if "/" not in file2_name or "\\" not in file2_name:
-            current_dir = os.getcwd()
-            if "/" in current_dir:
-                file2_name = current_dir + "/" + file2_name
-                if os.path.exists(file2_name):
-                    break
-                else:
-                    print("\nThe sales record filename or filepath you provided is not valid")
-                    print("Examples of valid filenames or filepaths: \"sales.csv\" or \"Q1 tests/sales.csv\"")
-                    file2_name = input("\nplease provide a valid filename or filepath: ")
-            elif "\\" in current_dir:
-                file2_name = current_dir + "\\" + file2_name
-                if os.path.exists(file2_name):
-                    break
-                else:
-                    print("\nThe sales record filename or filepath you provided is not valid")
-                    print("Examples of valid filenames or filepaths: \"sales.csv\" or \"Q1 tests/sales.csv\"")
-                    file2_name = input("\nplease provide a valid filename or filepath: ")
-            
-        else:
-            if os.path.exists(file2_name):
-                break
-            else:
-                print("\nThe sales record filename or filepath you provided is not valid")
-                print("Examples of valid filenames or filepaths: \"sales.csv\" or \"Q1 tests/sales.csv\"")
-                file2_name = input("\nplease provide a valid filename or filepath: ")
-        
-    with open(file1_name, newline="", encoding="utf-8-sig") as file1, open(file2_name, newline="", encoding="utf-8-sig") as file2:
-        reader1 = csv.DictReader(file1)
-        reader2 = csv.DictReader(file2) 
-                    
-        for row in reader1:
-            customers[row["cust_id"]] = {
-                "cust_id": row["cust_id"],
-                "name": row["name"],
-                "postcode": row["postcode"],
-                "phone number": row["phone number"]
-            }
-                            
-        for row in reader2:
-            sales[row["trans_id"]] = {
-                "date": row["date"],
-                "trans_id": row["trans_id"],
-                "customer_id": row["customer_id"],
-                "category": row["category"],
-                "value": row["value"]
-            }
-    
-    return customers, sales
-
 def option1(dictionary):
     ''' This function takes a dictionary as the parameter. If the dictionary is empty, it loads customer
     and sales records from another function, these are sent to the dictionary. If the dictionary is not
@@ -136,42 +42,151 @@ def option1(dictionary):
     
     return dictionary
 
-def print_dict(dictionary, num_lines):
-    ''' This function takes a dictionary and num_lines as its parameter and prints the records line by line.
-    num_lines acts like head command and tha number of records is printed. '''
-    
-    count = num_lines # I set a count here to act like head
-    print()
-    print("Loaded Records")
-    
-    for key, value in dictionary.items(): # this iterates over entries in the dictionary('customer records' and 'sales record')
-        print()
-        print(key)
-        
-        for inner_key, inner_value in value.items(): # this iterates over the inner dictionaries
-            print(inner_value)
-            count -= 1
-            
-            if count == 0:# if count has become zero, it is reset to num_lines so that second record also gets same treatment as record 1
-                count = num_lines
-                break
-            
-    return
-
-def option2(dictionary):
+def option2():
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option3 can use. '''
     record = 'customer records'
     header = ['cust_id','name','postcode','phone number']
+        
+    return record, header
+
+def option3():
+    ''' This option simply initializes record, header and checks whether the dictionary in memory is
+    populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
+    general save records function which either it or option2 can use. '''
+    record = 'sales record'
+    header = ['date','trans_id','customer_id','category','value']
     
-    if not dictionary:
-        print("\nThere are no records to be written yet. Please load some records to get started.")
+    return record, header
+
+def load_records():
+    ''' This is definitely a long function but I couldnt do it any shorter without creating more functions.
+    This function initializes two dictionaries, gets file names as input, checks for whether the file exists,
+    if the file does not exist then it asks for new file names, then the records in the files are iterated over
+    and sent to dictionaries. This function returns the filled dictionaries. '''
     
+    customers = {}
+    sales = {}
+
+    file1_name = input("\nplease provide the filename or filepath of customer records:")
+    
+    while True:
+        
+        if "/" not in file1_name or "\\" not in file1_name: # if user enters filename instead of path
+            current_dir = os.getcwd()
+            if "/" in current_dir: # if users are using Linux, Mac or other unix like OS
+                file1_name = current_dir + "/" + file1_name
+                if os.path.exists(file1_name):
+                    break
+                else:
+                    print("\nThe customer records filename or filepath you provided is not valid")
+                    file1_name = input("\nplease provide a valid filename or filepath: ")
+            elif "\\" in current_dir: # if users are using windows
+                file1_name = current_dir + "\\" + file1_name
+                if os.path.exists(file1_name):
+                    break
+                else:
+                    print("\nThe customers record filename or filepath you provided is not valid")
+
+                    file1_name = input("\nplease provide a valid filename or filepath: ")   
+        
+        else: # if user enters path instead of filename
+            if os.path.exists(file1_name):
+                break
+            else:
+                print("\nThe customers record filename or filepath you provided is not valid")
+                file1_name = input("\nplease provide a valid filename or filepath: ")
+
+    file2_name = input("please provide the filename or filepath of Sales record:")    
+    
+    while True:
+        
+        if "/" not in file2_name or "\\" not in file2_name:
+            current_dir = os.getcwd()
+            if "/" in current_dir:
+                file2_name = current_dir + "/" + file2_name
+                if os.path.exists(file2_name):
+                    break
+                else:
+                    print("\nThe sales record filename or filepath you provided is not valid")
+                    file2_name = input("\nplease provide a valid filename or filepath: ")
+            elif "\\" in current_dir:
+                file2_name = current_dir + "\\" + file2_name
+                if os.path.exists(file2_name):
+                    break
+                else:
+                    print("\nThe sales record filename or filepath you provided is not valid")
+                    file2_name = input("\nplease provide a valid filename or filepath: ")
+            
+        else:
+            if os.path.exists(file2_name):
+                break
+            else:
+                print("\nThe sales record filename or filepath you provided is not valid")
+                file2_name = input("\nplease provide a valid filename or filepath: ")
+        
+    with open(file1_name, newline="", encoding="utf-8-sig") as file1, open(file2_name, newline="", encoding="utf-8-sig") as file2:
+        reader1 = csv.DictReader(file1)
+        reader2 = csv.DictReader(file2) 
+                    
+        for row in reader1:
+            customers[row["cust_id"]] = {
+                "cust_id": row["cust_id"],
+                "name": row["name"],
+                "postcode": row["postcode"],
+                "phone number": row["phone number"]
+            }
+                            
+        for row in reader2:
+            sales[row["trans_id"]] = {
+                "date": row["date"],
+                "trans_id": row["trans_id"],
+                "customer_id": row["customer_id"],
+                "category": row["category"],
+                "value": row["value"]
+            }
+    
+    return customers, sales
+
+def print_dict(dictionary, num_lines):
+    ''' This function takes a dictionary and num_lines as its parameter and prints the records line by line.
+    num_lines acts like head command and tha number of records is printed. '''
+    
+    count = num_lines # I set a count here to act like head
+    count = int(count)
+    
+    print()
+    print("Loaded Records")
+    
+    if count != "" or count > 0:
+        for key, value in dictionary.items(): # this iterates over entries in the dictionary('customer records' and 'sales record')
+            print()
+            print(key)
+            
+            for inner_key, inner_value in value.items(): # this iterates over the inner dictionaries
+                print(inner_value)
+                count -= 1
+                
+                if count == 0:# if count has become zero, it is reset to num_lines so that second record also gets same treatment as record 1
+                    count = num_lines
+                    count = int(count)
+                    break
+        print("\nLoad Complete")
+            
+    elif count == "":
+        for key, value in dictionary.items(): # this iterates over entries in the dictionary('customer records' and 'sales record')
+            print()
+            print(key)
+            
+            for inner_key, inner_value in value.items(): # this iterates over the inner dictionaries
+                print(inner_value)
+        print("\nLoad Complete")
+            
     else:
-        save_records(dictionary, record, header)
-    
-    return 
+        print("\nLoad Complete")
+                    
+    return
 
 def save_records(dictionary, record, header):
     ''' This function helps us save records to files. It takes 3 parameters, the dicionary, record,
@@ -182,111 +197,100 @@ def save_records(dictionary, record, header):
     It uses generalisation so that it can be called by both option 2 and 3 and deliver results accordingly.
     Note: if not dict is checked in function option2()'''
     
-    
-    filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
-    current_dir = os.getcwd()
-    if "/" not in filepath or "\\" not in filepath:
-        if "/" in current_dir:   
-            filepath = current_dir + "/" + filepath
-            if os.path.exists(filepath):
-                overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
-                if overwrite.upper() == "Y" or overwrite == "":
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in dictionary.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")           
-                                    
-                else:
-                    pass
-            else:
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in dictionary.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")
-                                    
-        elif "\\" in current_dir:   
-            filepath = current_dir + "\\" + filepath
-            if os.path.exists(filepath):
-                overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
-                if overwrite.upper() == "Y" or overwrite == "":
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in dictionary.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")
-                                    
-                else:
-                    pass
-            else:
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in dictionary.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")   
-                                    
-    else:
-        if os.path.exists(filepath):
-            overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
-            if overwrite.upper() == "Y" or overwrite == "":
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
-                    row = []
-                    for key, value in dictionary.items():
-                        if key == record:
-                            for innerkey, innerval in value.items():
-                                for deepkey, deepval in innerval.items():
-                                    row.append(deepval)
-                                writer.writerow(row)
-                                row = []
-                    print("\nwrite complete")
-                    
-            else:
-                pass
-
-    return
-
-def option3(dictionary):
-    ''' This option simply initializes record, header and checks whether the dictionary in memory is
-    populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
-    general save records function which either it or option2 can use. '''
-    record = 'sales record'
-    header = ['date','trans_id','customer_id','category','value']
-    
     if not dictionary:
         print("\nThere are no records to be written yet. Please load some records to get started.")
     
     else:
-        save_records(dictionary, record, header)
-    
-    return 
+        filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
+        current_dir = os.getcwd()
+        if "/" not in filepath or "\\" not in filepath:
+            if "/" in current_dir:   
+                filepath = current_dir + "/" + filepath
+                if os.path.exists(filepath):
+                    overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
+                    if overwrite.upper() == "Y" or overwrite == "":
+                        with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                            writer = csv.writer(file)
+                            writer.writerow(header)
+                            row = []
+                            for key, value in dictionary.items():
+                                if key == record:
+                                    for innerkey, innerval in value.items():
+                                        for deepkey, deepval in innerval.items():
+                                            row.append(deepval)
+                                        writer.writerow(row)
+                                        row = []
+                            print("\nwrite complete")           
+                                        
+                    else:
+                        print("ok")
+                else:
+                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                            writer = csv.writer(file)
+                            writer.writerow(header)
+                            row = []
+                            for key, value in dictionary.items():
+                                if key == record:
+                                    for innerkey, innerval in value.items():
+                                        for deepkey, deepval in innerval.items():
+                                            row.append(deepval)
+                                        writer.writerow(row)
+                                        row = []
+                            print("\nwrite complete")
+                                        
+            elif "\\" in current_dir:   
+                filepath = current_dir + "\\" + filepath
+                if os.path.exists(filepath):
+                    overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
+                    if overwrite.upper() == "Y" or overwrite == "":
+                        with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                            writer = csv.writer(file)
+                            writer.writerow(header)
+                            row = []
+                            for key, value in dictionary.items():
+                                if key == record:
+                                    for innerkey, innerval in value.items():
+                                        for deepkey, deepval in innerval.items():
+                                            row.append(deepval)
+                                        writer.writerow(row)
+                                        row = []
+                            print("\nwrite complete")
+                                        
+                    else:
+                        print("ok")
+                else:
+                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                            writer = csv.writer(file)
+                            writer.writerow(header)
+                            row = []
+                            for key, value in dictionary.items():
+                                if key == record:
+                                    for innerkey, innerval in value.items():
+                                        for deepkey, deepval in innerval.items():
+                                            row.append(deepval)
+                                        writer.writerow(row)
+                                        row = []
+                            print("\nwrite complete")   
+                                        
+        else:
+            if os.path.exists(filepath):
+                overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
+                if overwrite.upper() == "Y" or overwrite == "":
+                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                        writer = csv.writer(file)
+                        writer.writerow(header)
+                        row = []
+                        for key, value in dictionary.items():
+                            if key == record:
+                                for innerkey, innerval in value.items():
+                                    for deepkey, deepval in innerval.items():
+                                        row.append(deepval)
+                                    writer.writerow(row)
+                                    row = []
+                        print("\nwrite complete")
+                        
+                else:
+                    print("ok")
+
+    return
+
