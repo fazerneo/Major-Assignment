@@ -51,7 +51,7 @@ def option2():
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option3 can use. '''
-    record = 'customer records'
+    record = 'customer_records'
     header = ['cust_id','name','postcode','phone number']
     
     return record, header
@@ -60,7 +60,7 @@ def option3():
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option2 can use. '''
-    record = 'sales record'
+    record = 'sales_records'
     header = ['date','trans_id','customer_id','category','value']
     
     return record, header
@@ -202,10 +202,7 @@ def save_records(Loaded_records, record, header):
     It uses generalisation so that it can be called by both option 2 and 3 and deliver results accordingly.
     Note: if not dict is checked in function option2()'''
     print(Loaded_records)
-    if not Loaded_records:
-        print("\nThere are no records to be written yet. Please load some records to get started.")
-    
-    else:
+    if Loaded_records:
         filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
         current_dir = os.getcwd()
         if "/" not in filepath or "\\" not in filepath:
@@ -257,8 +254,8 @@ def save_records(Loaded_records, record, header):
                                     for innerkey, innerval in value.items():
                                         for deepkey, deepval in innerval.items():
                                             row.append(deepval)
-                                        writer.writerow(row)
-                                        row = []
+                                    writer.writerow(row)
+                                    row = []
                             print("\nwrite complete")
                                         
                     else:
@@ -273,8 +270,8 @@ def save_records(Loaded_records, record, header):
                                     for innerkey, innerval in value.items():
                                         for deepkey, deepval in innerval.items():
                                             row.append(deepval)
-                                        writer.writerow(row)
-                                        row = []
+                                    writer.writerow(row)
+                                    row = []
                             print("\nwrite complete")   
                                         
         else:
@@ -290,12 +287,16 @@ def save_records(Loaded_records, record, header):
                                 for innerkey, innerval in value.items():
                                     for deepkey, deepval in innerval.items():
                                         row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
+                                writer.writerow(row)
+                                row = []
                         print("\nwrite complete")
                         
                 else:
                     print("ok")
+        
+    
+    else:
+        print("\nThere are no records to be written yet. Please load some records to get started.")
 
     return
 
