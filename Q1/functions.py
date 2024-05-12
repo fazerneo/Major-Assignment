@@ -47,23 +47,35 @@ def option1(dictionary):
     
     return dictionary
 
-def option2():
+def option2(Loaded_records):
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option3 can use. '''
     record = 'customer_records'
     header = ['cust_id','name','postcode','phone number']
     
-    return record, header
+    if not Loaded_records:
+        print("\nThere are no records to be written yet. Please load some records to get started.")
+    else:
+        dictionary = Loaded_records.copy()
+        save_records(dictionary, record, header)
+    
+    return
 
-def option3():
+def option3(Loaded_records):
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option2 can use. '''
     record = 'sales_records'
     header = ['date','trans_id','customer_id','category','value']
     
-    return record, header
+    if not Loaded_records:
+        print("\nThere are no records to be written yet. Please load some records to get started.")
+    else:
+        dictionary = Loaded_records.copy()
+        save_records(dictionary, record, header)
+    
+    return
 
 def load_records():
     ''' This is definitely a long function but I couldnt do it any shorter without creating more functions.
@@ -201,80 +213,47 @@ def save_records(Loaded_records, record, header):
     overwrite if file exists or writes directly if file doesnt exist. It can accept both filename or filepath.
     It uses generalisation so that it can be called by both option 2 and 3 and deliver results accordingly.
     Note: if not dict is checked in function option2()'''
-    print(Loaded_records)
-    if Loaded_records:
-        filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
-        current_dir = os.getcwd()
-        if "/" not in filepath or "\\" not in filepath:
-            if "/" in current_dir:   
-                filepath = current_dir + "/" + filepath
-                if os.path.exists(filepath):
-                    overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
-                    if overwrite.upper() == "Y" or overwrite == "":
-                        with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                            writer = csv.writer(file)
-                            writer.writerow(header)
-                            row = []
-                            for key, value in Loaded_records.items():
-                                if key == record:
-                                    for innerkey, innerval in value.items():
-                                        for deepkey, deepval in innerval.items():
-                                            row.append(deepval)
-                                        writer.writerow(row)
-                                        row = []
-                            print("\nwrite complete")           
-                                        
-                    else:
-                        print("ok")
-                else:
+    
+    
+    filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
+    current_dir = os.getcwd()
+    if "/" not in filepath or "\\" not in filepath:
+        if "/" in current_dir:   
+            filepath = current_dir + "/" + filepath
+            if os.path.exists(filepath):
+                overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
+                if overwrite.upper() == "Y" or overwrite == "":
                     with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                            writer = csv.writer(file)
-                            writer.writerow(header)
-                            row = []
-                            for key, value in Loaded_records.items():
-                                if key == record:
-                                    for innerkey, innerval in value.items():
-                                        for deepkey, deepval in innerval.items():
-                                            row.append(deepval)
-                                        writer.writerow(row)
-                                        row = []
-                            print("\nwrite complete")
-                                        
-            elif "\\" in current_dir:   
-                filepath = current_dir + "\\" + filepath
-                if os.path.exists(filepath):
-                    overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
-                    if overwrite.upper() == "Y" or overwrite == "":
-                        with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                            writer = csv.writer(file)
-                            writer.writerow(header)
-                            row = []
-                            for key, value in Loaded_records.items():
-                                if key == record:
-                                    for innerkey, innerval in value.items():
-                                        for deepkey, deepval in innerval.items():
-                                            row.append(deepval)
+                        writer = csv.writer(file)
+                        writer.writerow(header)
+                        row = []
+                        for key, value in Loaded_records.items():
+                            if key == record:
+                                for innerkey, innerval in value.items():
+                                    for deepkey, deepval in innerval.items():
+                                        row.append(deepval)
                                     writer.writerow(row)
                                     row = []
-                            print("\nwrite complete")
-                                        
-                    else:
-                        print("ok")
+                        print("\nwrite complete")           
+                                    
                 else:
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                            writer = csv.writer(file)
-                            writer.writerow(header)
-                            row = []
-                            for key, value in Loaded_records.items():
-                                if key == record:
-                                    for innerkey, innerval in value.items():
-                                        for deepkey, deepval in innerval.items():
-                                            row.append(deepval)
+                    print("ok")
+            else:
+                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                        writer = csv.writer(file)
+                        writer.writerow(header)
+                        row = []
+                        for key, value in Loaded_records.items():
+                            if key == record:
+                                for innerkey, innerval in value.items():
+                                    for deepkey, deepval in innerval.items():
+                                        row.append(deepval)
                                     writer.writerow(row)
                                     row = []
-                            print("\nwrite complete")   
-                                        
-        else:
+                        print("\nwrite complete")
+                                    
+        elif "\\" in current_dir:   
+            filepath = current_dir + "\\" + filepath
             if os.path.exists(filepath):
                 overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
                 if overwrite.upper() == "Y" or overwrite == "":
@@ -290,13 +269,45 @@ def save_records(Loaded_records, record, header):
                                 writer.writerow(row)
                                 row = []
                         print("\nwrite complete")
-                        
+                                    
                 else:
                     print("ok")
+            else:
+                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                        writer = csv.writer(file)
+                        writer.writerow(header)
+                        row = []
+                        for key, value in Loaded_records.items():
+                            if key == record:
+                                for innerkey, innerval in value.items():
+                                    for deepkey, deepval in innerval.items():
+                                        row.append(deepval)
+                                writer.writerow(row)
+                                row = []
+                        print("\nwrite complete")   
+                                    
+    else:
+        if os.path.exists(filepath):
+            overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
+            if overwrite.upper() == "Y" or overwrite == "":
+                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+                    writer = csv.writer(file)
+                    writer.writerow(header)
+                    row = []
+                    for key, value in Loaded_records.items():
+                        if key == record:
+                            for innerkey, innerval in value.items():
+                                for deepkey, deepval in innerval.items():
+                                    row.append(deepval)
+                            writer.writerow(row)
+                            row = []
+                    print("\nwrite complete")
+                    
+            else:
+                print("ok")
         
     
-    else:
-        print("\nThere are no records to be written yet. Please load some records to get started.")
+    
 
     return
 
