@@ -38,3 +38,27 @@ You are required to provide test evidence in your assignment documentation that 
 You should test your program using multiple test data sets. You may create a few small test data sets of your own, perhaps containing a dozen customers and several dozens of sales records, and use these small test data sets to test your program first. Once your program works correctly with these small test data sets, you should then test your program using the above large test data set.
 
 When creating your own test files, use the same column names as in customers.csv and sales.csv.
+
+Question 2 (40%): Search and manipulation of customer and sales records (Back to Beginning)
+
+Revised your solution to Question 1 by adding new features in the form of additional menu options:
+
+5. Add the details of a new customer to the data structure containing customer and salles records. The customer details include the cust_id, the customer's name, the customer's postcode, the customer's phone number. When the user enters the details, only the customer's name is required, other details are optional (leaves it empty). Note, the customer id must be unique and be automatically generated, which must start from 100000 with 6 digits. For convenience to the user, the auto-generated customer id should be displayed after the customer record is successfully added.
+
+6. Add a new sales record for an existing customer. In this case, the user needs to provide the customer id. If the customer id exists, the user can then enter the details of a new sales record, ie, date, trans_id, cust_id, catetegory, and value. Note for each sales record, there must be a unque, auto-generated, transaction id for that sales record which starts from 100000000 with 9 digits. If the user provided customer id does not exist, inform the user that there is no such customer and ask the user to provide a correct customer number or return to the main menu.
+
+7. Search customers using a single search string. The search string is compared to the customer's id, name, postcode and phone number. Then the program will display the details of all matching customers. The search must be case-insensitive and must allow partial matches, for example, the search string "john" would match "John Smith" as well as "Elton Johns"
+
+8. Search sales records using a single search string. The search string is compared to customer id, date, category and value. Then the program will display the details of all matching sales records. Note: just like searching for customers, search for sales records must allow partial matches.
+
+9. Display all sales records from a customer using his/her customer id. When the customer id is given, the program should display all sales records due to that customer.
+
+10. Delete a sales record with a given transaction id.
+
+11. Delete a customer with a given customer id together with all sales records due to that customer.
+
+Restrictions:
+
+your design must be modular with at least two modules (in addition to the main module) in your implementation, each provides some closely related functionality.
+in this question, do not use ndarrays to store the customer records or transaction records.
+in this assignment, do not use any Data Base Management System or module.
