@@ -5,14 +5,19 @@ def menu():
     ''' This function prints out a menu for the main program and gets user input,
     the user input is then returned for use in the main program '''
     
-    print()
-    print("Sales Records Management System\n")
-    print("Please select an option below to get started")
-    print("1. Load Customer and Sales Records")
-    print("2. Save Customer Records")
-    print("3. Save Sales Records")
-    print("4. Quit Program")
-    user_input = input("Type the number corresponding to your desired action: ")
+    while True:
+        try:
+            print()
+            print("Sales Records Management System\n")
+            print("Please select an option below to get started")
+            print("[1]. Load Customer and Sales Records")
+            print("[2]. Save Customer Records")
+            print("[3]. Save Sales Records")
+            print("[4]. Quit Program")
+            user_input = input("Type the number corresponding to your desired action: ")
+            break
+        except ValueError:
+            print("Please enter a valid option between 1 and 4")
     
     return user_input
 
@@ -48,7 +53,7 @@ def option2():
     general save records function which either it or option3 can use. '''
     record = 'customer records'
     header = ['cust_id','name','postcode','phone number']
-        
+    
     return record, header
 
 def option3():
@@ -188,7 +193,7 @@ def print_dict(dictionary, num_lines):
                     
     return
 
-def save_records(dictionary, record, header):
+def save_records(Loaded_records, record, header):
     ''' This function helps us save records to files. It takes 3 parameters, the dicionary, record,
     which according to chosen option in main program can be customer records or sales record and
     header according to the record. This function can be run by option 2 or option 3 in main program.
@@ -196,8 +201,8 @@ def save_records(dictionary, record, header):
     overwrite if file exists or writes directly if file doesnt exist. It can accept both filename or filepath.
     It uses generalisation so that it can be called by both option 2 and 3 and deliver results accordingly.
     Note: if not dict is checked in function option2()'''
-    
-    if not dictionary:
+    print(Loaded_records)
+    if not Loaded_records:
         print("\nThere are no records to be written yet. Please load some records to get started.")
     
     else:
@@ -213,7 +218,7 @@ def save_records(dictionary, record, header):
                             writer = csv.writer(file)
                             writer.writerow(header)
                             row = []
-                            for key, value in dictionary.items():
+                            for key, value in Loaded_records.items():
                                 if key == record:
                                     for innerkey, innerval in value.items():
                                         for deepkey, deepval in innerval.items():
@@ -229,7 +234,7 @@ def save_records(dictionary, record, header):
                             writer = csv.writer(file)
                             writer.writerow(header)
                             row = []
-                            for key, value in dictionary.items():
+                            for key, value in Loaded_records.items():
                                 if key == record:
                                     for innerkey, innerval in value.items():
                                         for deepkey, deepval in innerval.items():
@@ -247,7 +252,7 @@ def save_records(dictionary, record, header):
                             writer = csv.writer(file)
                             writer.writerow(header)
                             row = []
-                            for key, value in dictionary.items():
+                            for key, value in Loaded_records.items():
                                 if key == record:
                                     for innerkey, innerval in value.items():
                                         for deepkey, deepval in innerval.items():
@@ -263,7 +268,7 @@ def save_records(dictionary, record, header):
                             writer = csv.writer(file)
                             writer.writerow(header)
                             row = []
-                            for key, value in dictionary.items():
+                            for key, value in Loaded_records.items():
                                 if key == record:
                                     for innerkey, innerval in value.items():
                                         for deepkey, deepval in innerval.items():
@@ -280,7 +285,7 @@ def save_records(dictionary, record, header):
                         writer = csv.writer(file)
                         writer.writerow(header)
                         row = []
-                        for key, value in dictionary.items():
+                        for key, value in Loaded_records.items():
                             if key == record:
                                 for innerkey, innerval in value.items():
                                     for deepkey, deepval in innerval.items():

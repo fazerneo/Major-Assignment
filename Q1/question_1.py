@@ -13,6 +13,7 @@ while True:
         print_dict(Loaded_records, head)
     
     elif user_input == 2:
+        
         (param2, param3) = option2()
         save_records(Loaded_records, param2, param3)
         
