@@ -62,3 +62,19 @@ Restrictions:
 your design must be modular with at least two modules (in addition to the main module) in your implementation, each provides some closely related functionality.
 in this question, do not use ndarrays to store the customer records or transaction records.
 in this assignment, do not use any Data Base Management System or module.
+
+Question 3 (30%): Display sales performance graphically (Back to Beginning)
+
+In Question 1 and Question 2, you may have used one or two language builtin data types, such as list and/or dictionary, to store the customer and sales records. These builtin data types provide many useful methods which greatly simplified your programming. For small data size, this is an appropriate design choice. However, if the system is to be used to handle very large data sets, such as thousands of customers and tens of thousands (or even more) of transactions, these built-in data types may not be the most appropriate to use as they are less efficient compared to the ndarrays.
+
+To improve the system efficiency, in this question, you will revise the program from Question 2 by storing the customer and sales records in a single ndarray and make the necessary adjustments to the rest of the program.
+
+Furthermore, you will provide the following additional features for analysing the sales performance in the form of the following additional menu options:
+
+1. Display the monthly sales values and the number of sales using two line graphs in one axes. The line graph must have an appropriate title, the labels for X axis and Y axis, and a legend.
+
+2. For a given customer, display the monthly sales values and the number of sales due to the customer using two line graphs in one axes. The line graph must have an appropriate title, the labels for X axis and Y axis, and a legend.
+
+3. For a given postcode, display the monthly sales values and the number of sales due to the customers located in the postcode area using two line graphs in one axes. The line graph must have an appropriate title, the labels for X axis and Y axis, and a legend.
+
+You should use Python modules numpy and matplotlib for this question.
