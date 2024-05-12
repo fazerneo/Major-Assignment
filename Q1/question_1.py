@@ -5,7 +5,6 @@ Loaded_records = {}
 while True: 
     
     user_input = menu()
-    user_input = int(user_input)
     
     if user_input == 1:
         Loaded_records = option1(Loaded_records)
