@@ -1,4 +1,4 @@
-from functions import *
+from functions_2 import *
 
 # empty global dictionary
 Loaded_records = {}
@@ -24,8 +24,12 @@ while True:
     elif user_input == 3:
         option3(Loaded_records)
     
-    # if user input is 4, we exit the looping menu
     elif user_input == 4:
+        option4(Loaded_records)
+    
+    
+    # if user input is 11, we exit the looping menu
+    elif user_input == 11:
         print("\nThank you for using the program")
         break
         

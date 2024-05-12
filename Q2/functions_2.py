@@ -13,7 +13,14 @@ def menu():
             print("[1]. Load Customer and Sales Records")
             print("[2]. Save Customer Records")
             print("[3]. Save Sales Records")
-            print("[4]. Quit Program")
+            print("[4]. Add customer details")
+            print("[5]. Add sales details")
+            print("[6]. Search customer details")
+            print("[7]. search sales details")
+            print("[8]. Display a customer's sales records")
+            print("[9]. Delete a sales record")
+            print("[10]. Delete a customer")
+            print("[11]. Quit Program")
             user_input = int(input("Type the number corresponding to your desired action: "))
             break
         except ValueError:
@@ -75,6 +82,38 @@ def option3(Loaded_records):
         dictionary = Loaded_records.copy()
         save_records(dictionary, record, header)
     
+    return
+
+def option4(Loaded_records):
+    while True:
+        name = input("\nPlease enter customer's name*: ")
+        if name != "":
+            break
+        else:
+            name = input("\nCustomer name is a required field, please enter a name: ")
+    postcode = input("Please enter customer's postcode: ")
+    phone_number = input("Please enter customer's phone number: ")
+    
+    record = 'customer_records'
+    customer_ids = []
+    for key, value in Loaded_records.items():
+        if key == record:
+            for innerkey, innerval in value.items():
+                customer_ids.append(innerkey)
+    
+    for i in range(100000, 999999):
+        if i not in customer_ids:
+            cust_id = i
+        
+    Loaded_records['customer_records'] = {
+        cust_id: {
+            'cust_id': cust_id,
+            'name': name,
+            'postcode': postcode,
+            'phone number': phone_number
+        }
+    }
+    print(Loaded_records)
     return
 
 def load_records():
