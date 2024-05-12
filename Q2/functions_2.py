@@ -36,6 +36,8 @@ def option1(dictionary):
     sent to the dictionary. If overwrite function is not given, then the function just prints the dictionary 
     and returns the dictionary for any further use. '''
     
+    print("\nLoad csv files")
+    
     if not dictionary: # evaluates to True if dictionary is empty. now we have an empty dictionary to work on
         (customers, sales) = load_records() # call a function and save into variables.
         dictionary['customer_records'] = customers # update dictionary with key
@@ -58,6 +60,9 @@ def option2(Loaded_records):
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option3 can use. '''
+    
+    print("\nSave customer records")
+    
     record = 'customer_records'
     header = ['cust_id','name','postcode','phone number']
     
@@ -73,6 +78,9 @@ def option3(Loaded_records):
     ''' This option simply initializes record, header and checks whether the dictionary in memory is
     populated or not. if it is empty, it shows a message to the user, if it is populated, it calls the
     general save records function which either it or option2 can use. '''
+    
+    print("\nSave sales records")
+    
     record = 'sales_records'
     header = ['date','trans_id','customer_id','category','value']
     
@@ -85,12 +93,13 @@ def option3(Loaded_records):
     return
 
 def option4(Loaded_records):
+    
+    print("\nAdd new customer")
+    
     while True:
         name = input("\nPlease enter customer's name*: ")
         if name != "":
             break
-        else:
-            name = input("\nCustomer name is a required field, please enter a name: ")
     postcode = input("Please enter customer's postcode: ")
     phone_number = input("Please enter customer's phone number: ")
     
@@ -99,22 +108,197 @@ def option4(Loaded_records):
     for key, value in Loaded_records.items():
         if key == record:
             for innerkey, innerval in value.items():
+                innerkey = int(innerkey)
                 customer_ids.append(innerkey)
-    
+        
+    cust_id = 0
     for i in range(100000, 999999):
         if i not in customer_ids:
             cust_id = i
+            break
+    
+    cust_id = str(cust_id)    
         
-    Loaded_records['customer_records'] = {
-        cust_id: {
+    new_customer = {
             'cust_id': cust_id,
             'name': name,
             'postcode': postcode,
             'phone number': phone_number
         }
-    }
-    print(Loaded_records)
+    
+    Loaded_records['customer_records'][cust_id] = new_customer
+    
+    print()
+    
+    for key, value in Loaded_records.items():
+        if key == record:
+            for innerkey, innerval in value.items():
+                if innerkey == cust_id:
+                    print(innerkey, innerval)
+                    break
+    
+    print("New customer added")
+    return Loaded_records
+
+def option5(Loaded_records):
+    
+    print("Add new transaction")
+    
+    record = "customer_records"
+    customer_ids = []
+    for key, value in Loaded_records.items():
+        if key == record:
+            for innerkey, innerval in value.items():
+                customer_ids.append(innerkey)
+    
+    while True:
+        customer_id = input("\nPlease enter customer's id*: ")
+        if customer_id != "":
+            if customer_id in customer_ids:
+                date = input("Please enter the date of transaction: ")
+                category = input("Please enter the category of purchase: ")
+                trans_value = input("Please enter the value of purchase: ")
+                break
+            else:
+                print("Customer id does not exist, please create a new id if it is a new customer.")
+                user_input = input("Would you like to create a new customer id [Y/N]: ")
+                if user_input.lower() == 'y':
+                    Loaded_records = option4(Loaded_records)
+                    break
+    
+    record = 'sales_records'
+    trans_ids = []
+    for key, value in Loaded_records.items():
+        if key == record:
+            for innerkey, innerval in value.items():
+                innerkey = int(innerkey)
+                trans_ids.append(innerkey)
+        
+    trans_id = 0
+    for i in range(100000000, 999999999):
+        if i not in trans_ids:
+            trans_id = i
+            break
+    
+    trans_id = str(trans_id)    
+        
+    new_trans = {
+            "date": date,
+            "trans_id": trans_id,
+            "customer_id": customer_id,
+            "category": category,
+            "value": trans_value
+        }
+    
+    Loaded_records['sales_records'][trans_id] = new_trans
+    
+    print()
+    
+    for key, value in Loaded_records.items():
+        if key == record:
+            for innerkey, innerval in value.items():
+                if innerkey == trans_id:
+                    print(innerkey, innerval)
+                    break
+    
+    print("New transaction added")
+    return Loaded_records
+
+def option6(Loaded_records):
+    
+    print("\nSearch customer records")
+    
+    while True:
+        search_string = input("\nPlease enter a search string: ").lower()
+        matches = {}
+        for key, value in Loaded_records.items():
+            if key == 'customer_records':
+                for innerkey, innerval in value.items():
+                    if (search_string in innerval['cust_id'] or
+                        search_string in innerval['name'].lower() or
+                        search_string in innerval['postcode'] or
+                        search_string in innerval['phone number']):
+                        
+                        matches[innerkey] = innerval
+        
+        if matches:
+            for key, value in matches.items():
+                print(key, value)
+        else:
+            print("no records found")
+            
+        if search_string == "stop":
+            break
+    
     return
+
+def option7(Loaded_records):
+    
+    print("\nSearch sales records")
+    
+    while True:
+        search_string = input("\nPlease enter a search string: ").lower()
+        matches = {}
+        for key, value in Loaded_records.items():
+            if key == 'sales_records':
+                for innerkey, innerval in value.items():
+                    if (search_string in innerval['date'] or
+                        search_string in innerval['customer_id'].lower() or
+                        search_string in innerval['category'] or
+                        search_string in innerval['value']):
+                        
+                        matches[innerkey] = innerval
+        
+        if matches:
+            for key, value in matches.items():
+                print(key, value)
+        else:
+            print("no records found")
+            
+        if search_string == "stop":
+            break
+        
+    return
+
+def option8(Loaded_records):
+    print("\nsales records from a customer using his/her customer id.")
+    record = "customer_records"
+    customer_ids = []
+    for key, value in Loaded_records.items():
+        if key == record:
+            for innerkey, innerval in value.items():
+                customer_ids.append(innerkey)
+    
+    while True:
+        customer_id = input("\nPlease enter customer's id*: ")
+        if customer_id != "":
+            if customer_id in customer_ids:
+                matches = {}
+                for key, value in Loaded_records.items():
+                    if key == 'sales_records':
+                        for innerkey, innerval in value.items():
+                            if customer_id in innerval["customer_id"]:
+                                
+                                matches[innerkey] = innerval
+                
+                if matches:
+                    num = 1
+                    for key, value in matches.items():
+                        print(f"{num}. {value}")
+                        num += 1
+                else:
+                    print("No customer transactions found")
+                
+            else:
+                print("Customer ID does not exist")
+
+        if customer_id.lower() == "stop":
+            break
+        
+    return
+
+def option9(Loaded_records):
+    pr
 
 def load_records():
     ''' This is definitely a long function but I couldnt do it any shorter without creating more functions.

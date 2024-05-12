@@ -25,8 +25,22 @@ while True:
         option3(Loaded_records)
     
     elif user_input == 4:
-        option4(Loaded_records)
+        Loaded_records = option4(Loaded_records)
     
+    elif user_input == 5:
+        Loaded_records = option5(Loaded_records)
+        
+    elif user_input == 6:
+        option6(Loaded_records)
+    
+    elif user_input == 7:
+        option7(Loaded_records)
+        
+    elif user_input == 8:
+        option8(Loaded_records)
+        
+    elif user_input == 9:
+        Loaded_records = option9(Loaded_records)
     
     # if user input is 11, we exit the looping menu
     elif user_input == 11:
