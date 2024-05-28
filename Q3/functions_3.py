@@ -373,6 +373,126 @@ def option10(Loaded_records):
         
     return Loaded_records
 
+def option11(loaded_records):
+    """ This function takes loaded_records as it's parameter, notes monthly sales using an ndarray 
+    to store data according to month and plots a line graph to visualize """
+
+    sales_data = loaded_records.get("sales_records", {})
+
+    if not sales_data:
+        print("\nThere are no sales records to view.")
+
+    monthly_sales = np.zeros(12) 
+    
+    for value in sales_data.values():
+        month = int(value['date'].split("-")[1])-1
+        sales = value['value']
+        
+        monthly_sales[month] += sales
+    
+    Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    
+    x = np.arange(1, 13)
+    
+    plt.figure(figsize=(10, 8))
+    plt.plot(x, monthly_sales, marker='o')
+    plt.xlabel("Month")
+    plt.ylabel("Sales")
+    plt.title("Monthly Sales")
+    plt.grid(True)
+    plt.xticks(x, Months)
+    plt.tight_layout()
+    plt.show()
+
+def option12(loaded_records, customer_id):
+    """
+    This function analyzes loaded sales records for a specific customer and displays monthly sales.
+
+    Args:
+        loaded_records (dict): Dictionary containing customer and sales records.
+        customer_id (str): Customer ID to filter sales records.
+
+    Returns:
+        None
+    """
+
+    sales_data = loaded_records.get("sales_records", {})
+
+    if not sales_data:
+        print("\nThere are no sales records to analyze.")
+    return
+
+    # Filter sales data by customer ID
+    customer_sales = {record["trans_id"]: record for record in sales_data.values() if record["customer_id"] == customer_id}
+
+    if not customer_sales:
+        print(f"\nCustomer ID '{customer_id}' not found in sales records.")
+    return
+
+    # Extract month data from sales dates
+    months = [datetime.datetime.strptime(record["date"], "%Y-%m-%d").month for record in customer_sales.values()]
+
+    # Count sales per month
+    month_counts, month_bins = np.histogram(months, bins=range(1, 13))
+
+    # Generate plot
+    plt.figure(figsize=(10, 6))
+    plt.bar(month_bins[:-1], month_counts, width=0.8, color='skyblue', ec='k')
+    plt.xlabel("Month")
+    plt.ylabel("Number of Sales")
+    plt.title(f"Monthly Sales for Customer ID: {customer_id}")
+    plt.xticks(month_bins[:-1] + 0.4, range(1, 13))  # Adjust x-axis labels for better alignment
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.show()
+
+def option13(loaded_records, postcode):
+    """
+    This function analyzes loaded sales records and displays monthly sales for a specific postcode.
+
+    Args:
+        loaded_records (dict): Dictionary containing customer and sales records.
+        postcode (str): Postcode to filter sales records.
+
+    Returns:
+        None
+    """
+    
+    sales_data = loaded_records.get("sales_records", {})
+    customer_data = loaded_records.get("customer_records", {})
+    
+    if not (sales_data and customer_data):
+        print("\nThere are no sales or customer records to analyze.")
+        return
+
+    # Filter customer IDs by postcode
+    customer_ids = [record["cust_id"] for record in customer_data.values() if record["postcode"] == postcode]
+
+    # Filter sales data by customer IDs
+    postcode_sales = {record["trans_id"]: record for record in sales_data.values() if record["customer_id"] in customer_ids}
+    
+    if not postcode_sales:
+        print(f"\nNo sales records found for postcode '{postcode}'.")
+    return
+
+    # Extract month data from sales dates
+    months = [datetime.datetime.strptime(record["date"], "%Y-%m-%d").month for record in postcode_sales.values()]
+
+    # Count sales per month
+    month_counts, month_bins = np.histogram(months, bins=range(1, 13))
+
+    # Generate plot
+    plt.figure(figsize=(10, 6))
+    plt.bar(month_bins[:-1], month_counts, width=0.8, color='skyblue', ec='k')
+    plt.xlabel("Month")
+    plt.ylabel("Number of Sales")
+    plt.title(f"Monthly Sales for Postcode: {postcode}")
+    plt.xticks(month_bins[:-1] + 0.4, range(1, 13))  # Adjust x-axis labels for better alignment
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.show()
+
+
+                
+
 def load_records():
     ''' This is definitely a long function but I couldnt do it any shorter without creating more functions.
     This function initializes two dictionaries, gets file names as input, checks for whether the file exists,

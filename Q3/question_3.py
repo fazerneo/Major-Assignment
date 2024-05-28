@@ -53,13 +53,13 @@ while True:
         Loaded_records = option10(Loaded_records)
     
     elif user_input == 11:  
-        Loaded_records = option10(Loaded_records)
+        Loaded_records = option11(Loaded_records)
         
     elif user_input == 12:  
-        Loaded_records = option10(Loaded_records)
+        Loaded_records = option12(Loaded_records)
         
     elif user_input == 13:  
-        Loaded_records = option10(Loaded_records)
+        Loaded_records = option13(Loaded_records)
     
     # if user input is 14, we exit the looping menu
     elif user_input == 14:
