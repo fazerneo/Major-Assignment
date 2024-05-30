@@ -29,7 +29,7 @@ def menu():
             user_input = int(input("Type the number corresponding to your desired action: "))
             break
         except ValueError:
-            print("Please enter a valid option between 1 and 4")
+            print("Please enter a valid option between 1 and 14")
     
     return user_input
 
@@ -110,13 +110,9 @@ def option4(Loaded_records):
     postcode = input("Please enter customer's postcode: ")
     phone_number = input("Please enter customer's phone number: ")
     
-    record = 'customer_records'
+    customer_data = Loaded_records.get("customer_records", {})
     customer_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                innerkey = int(innerkey)
-                customer_ids.append(innerkey)
+    [customer_ids.append(int(key)) for key in customer_data.keys()]
         
     cust_id = 0
     for i in range(100000, 999999):
@@ -137,12 +133,10 @@ def option4(Loaded_records):
     
     print()
     
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                if innerkey == cust_id:
-                    print(innerkey, innerval)
-                    break
+    for key, value in customer_data.items():
+        if key == cust_id:
+            print(key, value)
+            break
     
     print("New customer added")
     return Loaded_records
@@ -154,31 +148,24 @@ def option5(Loaded_records):
     
     print("Add new transaction")
     
-    record = "customer_records"
+    customer_data = Loaded_records.get("customer_records", {})
+    sales_data = Loaded_records.get("sales_records", {})
+    
     customer_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                customer_ids.append(innerkey)
+    [customer_ids.append(key) for key in customer_data.keys()]
     
     while True:
         customer_id = input("\nPlease enter customer's id* or 'stop' to quit: ")
         if customer_id != "":
             if customer_id in customer_ids:
-                date = input("Please enter the date of transaction: ")
+                date = input("Please enter the date of transaction (YYYY-MM-DD): ")
                 category = input("Please enter the category of purchase: ")
                 trans_value = input("Please enter the value of purchase: ")
                 break
     
-    record = 'sales_records'
     trans_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                innerkey = int(innerkey)
-                trans_ids.append(innerkey)
+    [trans_ids.append(int(key)) for key in sales_data.keys()]
         
-    trans_id = 0
     for i in range(100000000, 999999999):
         if i not in trans_ids:
             trans_id = i
@@ -198,12 +185,10 @@ def option5(Loaded_records):
     
     print()
     
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                if innerkey == trans_id:
-                    print(innerkey, innerval)
-                    break
+    for key, value in sales_data.items():
+        if key == trans_id:
+            print(key, value)
+            break
     
     print("New transaction added")
     return Loaded_records
@@ -213,19 +198,18 @@ def option6(Loaded_records):
     The search is made across customer id, name, postcode and phone number '''
     
     print("\nSearch customer records")
+    customer_data = Loaded_records.get("customer_records", {})
     
     while True:
         search_string = input("\nPlease enter a search string or 'stop' to quit: ").lower()
         matches = {}
-        for key, value in Loaded_records.items():
-            if key == 'customer_records':
-                for innerkey, innerval in value.items():
-                    if (search_string in innerval['cust_id'] or
-                        search_string in innerval['name'].lower() or
-                        search_string in innerval['postcode'] or
-                        search_string in innerval['phone number']):
-                        
-                        matches[innerkey] = innerval
+        for key, value in customer_data.items():
+            if (search_string in value['cust_id'] or
+                search_string in value['name'].lower() or
+                search_string in value['postcode'] or
+                search_string in value['phone number']):
+                
+                matches[key] = value
         
         if matches:
             for key, value in matches.items():
@@ -244,18 +228,18 @@ def option7(Loaded_records):
     
     print("\nSearch sales records")
     
+    sales_data = Loaded_records.get("sales_records", {})
+    
     while True:
         search_string = input("\nPlease enter a search string or 'stop' to quit: ").lower()
         matches = {}
-        for key, value in Loaded_records.items():
-            if key == 'sales_records':
-                for innerkey, innerval in value.items():
-                    if (search_string in innerval['date'] or
-                        search_string in innerval['customer_id'].lower() or
-                        search_string in innerval['category'] or
-                        search_string in innerval['value']):
-                        
-                        matches[innerkey] = innerval
+        for key, value in sales_data.items():
+            if (search_string in value['date'] or
+                search_string in value['customer_id'].lower() or
+                search_string in value['category'] or
+                search_string in str(value['value'])):
+                
+                matches[key] = value
         
         if matches:
             for key, value in matches.items():
@@ -273,24 +257,19 @@ def option8(Loaded_records):
     if the customer id exists, all related transactions are listed. '''
     
     print("\nsales records from a customer using his/her customer id.")
-    record = "customer_records"
+    customer_data = Loaded_records.get("customer_records", {})
+    sales_data = Loaded_records.get("sales_records", {})
     customer_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                customer_ids.append(innerkey)
+    [customer_ids.append(key) for key in customer_data.keys()]
     
     while True:
         customer_id = input("\nPlease enter customer's id* or 'stop' to quit: ")
         if customer_id != "":
             if customer_id in customer_ids:
                 matches = {}
-                for key, value in Loaded_records.items():
-                    if key == 'sales_records':
-                        for innerkey, innerval in value.items():
-                            if customer_id in innerval["customer_id"]:
-                                
-                                matches[innerkey] = innerval
+                for key, value in sales_data.items():
+                    if customer_id in value["customer_id"]:
+                        matches[key] = value
                 
                 if matches:
                     num = 1
@@ -314,11 +293,10 @@ def option9(Loaded_records):
     print("\nDelete sales record")
     
     record = "sales_records"
+    sales_data = Loaded_records.get(record, {})
+    
     trans_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                trans_ids.append(innerkey)
+    [trans_id.append(key) for key in sales_data.keys()]
 
     while True:
         trans_id = input("\nPlease enter transaction id* or 'stop' to quit: ")
@@ -342,11 +320,12 @@ def option10(Loaded_records):
     print("\nDelete customer and related transactions")
     
     record = "customer_records"
+    customer_data = Loaded_records.get(record, {})
+    sales_data = Loaded_records.get("sales_records", {})
+    print(sales_data)
+    
     cust_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                cust_ids.append(innerkey)
+    [cust_ids.append(value['cust_id']) for value in customer_data.values()]
     
     while True:
         cust_id = input("\nPlease enter customer id* or 'stop' to quit: ")
@@ -356,11 +335,10 @@ def option10(Loaded_records):
                 del Loaded_records[record][cust_id]
                         
                 trans_to_delete = []
-                for key, value in Loaded_records.items():
-                    if key == 'sales_records':
-                        for innerkey, innerval in value.items():
-                            if cust_id == innerval['customer_id']:
-                                trans_to_delete.append(innerkey)
+                for key, value in sales_data.items():
+                    if cust_id == value['customer_id']:
+                        trans_to_delete.append(key)
+                
                 for i in trans_to_delete:
                     print(f"\n{Loaded_records['sales_records'][i]}\ntransaction deleted")  
                     del Loaded_records['sales_records'][i]             
@@ -391,7 +369,6 @@ def option11(loaded_records):
         monthly_sales[month] += sales
     
     Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    
     x = np.arange(1, 13)
     
     plt.figure(figsize=(10, 8))
@@ -399,99 +376,142 @@ def option11(loaded_records):
     plt.xlabel("Month")
     plt.ylabel("Sales")
     plt.title("Monthly Sales")
-    plt.grid(True)
     plt.xticks(x, Months)
-    plt.tight_layout()
+    plt.yticks(np.arange(0, monthly_sales.max()+2000, 2000))
     plt.show()
 
-def option12(loaded_records, customer_id):
-    """
-    This function analyzes loaded sales records for a specific customer and displays monthly sales.
-
-    Args:
-        loaded_records (dict): Dictionary containing customer and sales records.
-        customer_id (str): Customer ID to filter sales records.
-
-    Returns:
-        None
-    """
-
-    sales_data = loaded_records.get("sales_records", {})
-
-    if not sales_data:
-        print("\nThere are no sales records to analyze.")
-    return
-
-    # Filter sales data by customer ID
-    customer_sales = {record["trans_id"]: record for record in sales_data.values() if record["customer_id"] == customer_id}
-
-    if not customer_sales:
-        print(f"\nCustomer ID '{customer_id}' not found in sales records.")
-    return
-
-    # Extract month data from sales dates
-    months = [datetime.datetime.strptime(record["date"], "%Y-%m-%d").month for record in customer_sales.values()]
-
-    # Count sales per month
-    month_counts, month_bins = np.histogram(months, bins=range(1, 13))
-
-    # Generate plot
-    plt.figure(figsize=(10, 6))
-    plt.bar(month_bins[:-1], month_counts, width=0.8, color='skyblue', ec='k')
-    plt.xlabel("Month")
-    plt.ylabel("Number of Sales")
-    plt.title(f"Monthly Sales for Customer ID: {customer_id}")
-    plt.xticks(month_bins[:-1] + 0.4, range(1, 13))  # Adjust x-axis labels for better alignment
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.show()
-
-def option13(loaded_records, postcode):
-    """
-    This function analyzes loaded sales records and displays monthly sales for a specific postcode.
-
-    Args:
-        loaded_records (dict): Dictionary containing customer and sales records.
-        postcode (str): Postcode to filter sales records.
-
-    Returns:
-        None
-    """
+def option12(loaded_records):
+    """ This function takes loaded_records as it's parameter, notes monthly sales and number of sales
+    using an ndarray to store data according to month and plots a two line graph on one axis
+    to visualize monthly sales value of the customer and number of sales of the customer. """
     
-    sales_data = loaded_records.get("sales_records", {})
+    print("\nCustomer Sales Overview")
+    customer_ids = []
     customer_data = loaded_records.get("customer_records", {})
+    [customer_ids.append(value['cust_id']) for value in customer_data.values()]
     
-    if not (sales_data and customer_data):
-        print("\nThere are no sales or customer records to analyze.")
-        return
+    sales_data = loaded_records.get("sales_records", {})
 
-    # Filter customer IDs by postcode
-    customer_ids = [record["cust_id"] for record in customer_data.values() if record["postcode"] == postcode]
-
-    # Filter sales data by customer IDs
-    postcode_sales = {record["trans_id"]: record for record in sales_data.values() if record["customer_id"] in customer_ids}
+    monthly_sales = np.zeros(12) 
+    number_sales = np.zeros(12)
     
-    if not postcode_sales:
-        print(f"\nNo sales records found for postcode '{postcode}'.")
-    return
-
-    # Extract month data from sales dates
-    months = [datetime.datetime.strptime(record["date"], "%Y-%m-%d").month for record in postcode_sales.values()]
-
-    # Count sales per month
-    month_counts, month_bins = np.histogram(months, bins=range(1, 13))
-
-    # Generate plot
-    plt.figure(figsize=(10, 6))
-    plt.bar(month_bins[:-1], month_counts, width=0.8, color='skyblue', ec='k')
-    plt.xlabel("Month")
-    plt.ylabel("Number of Sales")
-    plt.title(f"Monthly Sales for Postcode: {postcode}")
-    plt.xticks(month_bins[:-1] + 0.4, range(1, 13))  # Adjust x-axis labels for better alignment
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.show()
-
-
+    plot = False
+    customer_id = input("\nPlease enter customer's id: ")
+    
+    if customer_id != "":
+        if customer_id in customer_ids:
+            for value in sales_data.values():
+                if customer_id in value["customer_id"]:
+                    plot = True
+                    month = int(value['date'].split("-")[1]) - 1
+                    sales = value['value']
+                    
+                    monthly_sales[month] += sales
+                    number_sales[month] += 1
+        
+            if plot:       
+                Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                x = np.arange(1, 13)
                 
+                fig, ax1 = plt.subplots(figsize=(12, 12))
+                                
+                plot1 = ax1.plot(x, monthly_sales, 'go-', label="Monthly Sales")
+
+                ax1.set_xlabel("Month")
+                ax1.set_ylabel("Sales")
+                ax1.set_yticks(np.arange(0, monthly_sales.max()+2000, 2000))
+                plt.title(f"Monthly Sales and Number of Sales for Customer {customer_id}")
+                plt.xticks(x, Months)
+
+                ax2 = ax1.twinx()
+                
+                plot2 = ax2.plot(x, number_sales,'b*--', label="Number of Sales", )
+                ax2.set_yticks(number_sales+1)
+                ax2.set_ylabel("Number of sales")
+                
+                lines1, labels1 = ax1.get_legend_handles_labels()
+                lines2, labels2 = ax2.get_legend_handles_labels()
+                plt.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
+                plt.show()        
+            
+            else:
+                print("No customer transactions found")
+            
+        else:
+            print("Customer ID does not exist")
+    
+    else:
+        print("Error: Customer id should not be blank")
+
+def option13(loaded_records):
+    """ This function takes loaded_records as it's parameter, notes monthly sales and number of sales
+    using an ndarray to store data according to month and plots a two line graph on one axis
+    to visualize monthly sales value and number of sales of all the customers in a given postcode. """
+    
+    print("\nPostCode Sales Overview")
+    postcodes = []
+    customer_data = loaded_records.get("customer_records", {})
+    [postcodes.append(value['postcode']) for value in customer_data.values()]
+    
+    sales_data = loaded_records.get("sales_records", {})
+
+    monthly_sales = np.zeros(12) 
+    number_sales = np.zeros(12)
+    
+    customers_in_postcode = []
+    
+    plot = False
+    postcode = input("\nPlease enter postcode: ")
+    if postcodes != "":
+        if postcode in postcodes:
+            customers_in_postcode = [value["cust_id"] for value in customer_data.values() if value['postcode'] == postcode]
+            filtered_sales = [value for value in sales_data.values() if value["customer_id"] in customers_in_postcode]
+            
+            for value in filtered_sales:
+                
+                plot = True
+                month = int(value['date'].split("-")[1]) - 1
+                sales = value['value']
+                monthly_sales[month] += sales
+                number_sales[month] += 1
+        
+            if plot:       
+                Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                x = np.arange(1, 13)
+                
+                fig, ax1 = plt.subplots(figsize=(12, 12))
+                                
+                plot1 = ax1.plot(x, monthly_sales, 'go-', label="Monthly Sales")
+
+                ax1.set_xlabel("Month")
+                ax1.set_ylabel("Sales")
+
+                ax1.set_yticks(monthly_sales) # make each step an average of last step. also edit option 12
+                plt.title(f"Monthly Sales and Number of Sales for Postcode {postcode}")
+                plt.xticks(x, Months)
+                ax1.set_yticks(np.arange(0, monthly_sales.max()+2000, 2000))
+
+                ax2 = ax1.twinx()
+                
+                plot2 = ax2.plot(x, number_sales,'b*--', label="Number of Sales", )
+                
+                ax2.set_yticks(np.arange(0, number_sales.max() + 2))
+                ax2.set_ylabel("Number of sales")
+                
+                lines1, labels1 = ax1.get_legend_handles_labels()
+                lines2, labels2 = ax2.get_legend_handles_labels()
+                plt.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
+                
+                plt.show()        
+            
+            else:
+                print("No customer transactions found for the postcode")
+            
+        else:
+            print("Postcode does not exist")
+    
+    else:
+        print("Error: postcode should not be blank") 
 
 def load_records():
     ''' This is definitely a long function but I couldnt do it any shorter without creating more functions.
@@ -621,6 +641,20 @@ def print_dict(dictionary, num_lines):
                     
     return
 
+def csv_writer(filepath, data, header):
+    ''' This function is specifically made to be used by the save records function. It does the
+    actual writing to the csv files while save records just works through the many possibilities. '''
+    
+    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+        writer = csv.writer(file)
+        writer.writerow(header)
+        row = []
+        for value in data.values():
+            for innervalue in value.values():
+                row.append(innervalue)
+            writer.writerow(row)
+            row = []
+
 def save_records(Loaded_records, record, header):
     ''' This function helps us save records to files. It takes 3 parameters, the dicionary, record,
     which according to chosen option in main program can be customer records or sales record and
@@ -629,6 +663,8 @@ def save_records(Loaded_records, record, header):
     overwrite if file exists or writes directly if file doesnt exist. It can accept both filename or filepath.
     It uses generalisation so that it can be called by both option 2 and 3 and deliver results accordingly.
     Note: if not dict is checked in function option2()'''
+        
+    data = Loaded_records.get(record, {})
     
     filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
     current_dir = os.getcwd()
@@ -638,85 +674,36 @@ def save_records(Loaded_records, record, header):
             if os.path.exists(filepath):
                 overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
                 if overwrite.upper() == "Y" or overwrite == "":
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")           
+                    csv_writer(filepath, data, header)
+                    print("\nwrite complete")           
                                     
                 else:
                     print("ok")
+                    
             else:
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")
+                csv_writer(filepath, data, header)
+                print("\nwrite complete")
                                     
         elif "\\" in current_dir:   
             filepath = current_dir + "\\" + filepath
             if os.path.exists(filepath):
                 overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
                 if overwrite.upper() == "Y" or overwrite == "":
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                writer.writerow(row)
-                                row = []
-                        print("\nwrite complete")
+                    csv_writer(filepath, data, header)
+                    print("\nwrite complete")
                                     
                 else:
                     print("ok")
             else:
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                writer.writerow(row)
-                                row = []
-                        print("\nwrite complete")   
+                csv_writer(filepath, data, header)
+                print("\nwrite complete")  
                                     
     else:
         if os.path.exists(filepath):
             overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
             if overwrite.upper() == "Y" or overwrite == "":
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
-                    row = []
-                    for key, value in Loaded_records.items():
-                        if key == record:
-                            for innerkey, innerval in value.items():
-                                for deepkey, deepval in innerval.items():
-                                    row.append(deepval)
-                            writer.writerow(row)
-                            row = []
-                    print("\nwrite complete")
+                csv_writer(filepath, data, header)
+                print("\nwrite complete")
                     
             else:
                 print("ok")

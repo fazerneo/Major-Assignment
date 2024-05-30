@@ -24,7 +24,7 @@ def menu():
             user_input = int(input("Type the number corresponding to your desired action: "))
             break
         except ValueError:
-            print("Please enter a valid option between 1 and 4")
+            print("Please enter a valid option between 1 and 11")
     
     return user_input
 
@@ -105,13 +105,9 @@ def option4(Loaded_records):
     postcode = input("Please enter customer's postcode: ")
     phone_number = input("Please enter customer's phone number: ")
     
-    record = 'customer_records'
+    customer_data = Loaded_records.get("customer_records", {})
     customer_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                innerkey = int(innerkey)
-                customer_ids.append(innerkey)
+    [customer_ids.append(int(key)) for key in customer_data.keys()]
         
     cust_id = 0
     for i in range(100000, 999999):
@@ -132,12 +128,10 @@ def option4(Loaded_records):
     
     print()
     
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                if innerkey == cust_id:
-                    print(innerkey, innerval)
-                    break
+    for key, value in customer_data.items():
+        if key == cust_id:
+            print(key, value)
+            break
     
     print("New customer added")
     return Loaded_records
@@ -149,31 +143,24 @@ def option5(Loaded_records):
     
     print("Add new transaction")
     
-    record = "customer_records"
+    customer_data = Loaded_records.get("customer_records", {})
+    sales_data = Loaded_records.get("sales_records", {})
+    
     customer_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                customer_ids.append(innerkey)
+    [customer_ids.append(key) for key in customer_data.keys()]
     
     while True:
         customer_id = input("\nPlease enter customer's id* or 'stop' to quit: ")
         if customer_id != "":
             if customer_id in customer_ids:
-                date = input("Please enter the date of transaction: ")
+                date = input("Please enter the date of transaction (YYYY-MM-DD): ")
                 category = input("Please enter the category of purchase: ")
                 trans_value = input("Please enter the value of purchase: ")
                 break
     
-    record = 'sales_records'
     trans_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                innerkey = int(innerkey)
-                trans_ids.append(innerkey)
+    [trans_ids.append(int(key)) for key in sales_data.keys()]
         
-    trans_id = 0
     for i in range(100000000, 999999999):
         if i not in trans_ids:
             trans_id = i
@@ -193,12 +180,10 @@ def option5(Loaded_records):
     
     print()
     
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                if innerkey == trans_id:
-                    print(innerkey, innerval)
-                    break
+    for key, value in sales_data.items():
+        if key == trans_id:
+            print(key, value)
+            break
     
     print("New transaction added")
     return Loaded_records
@@ -208,19 +193,18 @@ def option6(Loaded_records):
     The search is made across customer id, name, postcode and phone number '''
     
     print("\nSearch customer records")
+    customer_data = Loaded_records.get("customer_records", {})
     
     while True:
         search_string = input("\nPlease enter a search string or 'stop' to quit: ").lower()
         matches = {}
-        for key, value in Loaded_records.items():
-            if key == 'customer_records':
-                for innerkey, innerval in value.items():
-                    if (search_string in innerval['cust_id'] or
-                        search_string in innerval['name'].lower() or
-                        search_string in innerval['postcode'] or
-                        search_string in innerval['phone number']):
-                        
-                        matches[innerkey] = innerval
+        for key, value in customer_data.items():
+            if (search_string in value['cust_id'] or
+                search_string in value['name'].lower() or
+                search_string in value['postcode'] or
+                search_string in value['phone number']):
+                
+                matches[key] = value
         
         if matches:
             for key, value in matches.items():
@@ -239,18 +223,18 @@ def option7(Loaded_records):
     
     print("\nSearch sales records")
     
+    sales_data = Loaded_records.get("sales_records", {})
+    
     while True:
         search_string = input("\nPlease enter a search string or 'stop' to quit: ").lower()
         matches = {}
-        for key, value in Loaded_records.items():
-            if key == 'sales_records':
-                for innerkey, innerval in value.items():
-                    if (search_string in innerval['date'] or
-                        search_string in innerval['customer_id'].lower() or
-                        search_string in innerval['category'] or
-                        search_string in innerval['value']):
-                        
-                        matches[innerkey] = innerval
+        for key, value in sales_data.items():
+            if (search_string in value['date'] or
+                search_string in value['customer_id'].lower() or
+                search_string in value['category'] or
+                search_string in str(value['value'])):
+                
+                matches[key] = value
         
         if matches:
             for key, value in matches.items():
@@ -268,24 +252,19 @@ def option8(Loaded_records):
     if the customer id exists, all related transactions are listed. '''
     
     print("\nsales records from a customer using his/her customer id.")
-    record = "customer_records"
+    customer_data = Loaded_records.get("customer_records", {})
+    sales_data = Loaded_records.get("sales_records", {})
     customer_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                customer_ids.append(innerkey)
+    [customer_ids.append(key) for key in customer_data.keys()]
     
     while True:
         customer_id = input("\nPlease enter customer's id* or 'stop' to quit: ")
         if customer_id != "":
             if customer_id in customer_ids:
                 matches = {}
-                for key, value in Loaded_records.items():
-                    if key == 'sales_records':
-                        for innerkey, innerval in value.items():
-                            if customer_id in innerval["customer_id"]:
-                                
-                                matches[innerkey] = innerval
+                for key, value in sales_data.items():
+                    if customer_id in value["customer_id"]:
+                        matches[key] = value
                 
                 if matches:
                     num = 1
@@ -309,11 +288,10 @@ def option9(Loaded_records):
     print("\nDelete sales record")
     
     record = "sales_records"
+    sales_data = Loaded_records.get(record, {})
+    
     trans_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                trans_ids.append(innerkey)
+    [trans_id.append(key) for key in sales_data.keys()]
 
     while True:
         trans_id = input("\nPlease enter transaction id* or 'stop' to quit: ")
@@ -337,11 +315,12 @@ def option10(Loaded_records):
     print("\nDelete customer and related transactions")
     
     record = "customer_records"
+    customer_data = Loaded_records.get(record, {})
+    sales_data = Loaded_records.get("sales_records", {})
+    print(sales_data)
+    
     cust_ids = []
-    for key, value in Loaded_records.items():
-        if key == record:
-            for innerkey, innerval in value.items():
-                cust_ids.append(innerkey)
+    [cust_ids.append(value['cust_id']) for value in customer_data.values()]
     
     while True:
         cust_id = input("\nPlease enter customer id* or 'stop' to quit: ")
@@ -351,11 +330,10 @@ def option10(Loaded_records):
                 del Loaded_records[record][cust_id]
                         
                 trans_to_delete = []
-                for key, value in Loaded_records.items():
-                    if key == 'sales_records':
-                        for innerkey, innerval in value.items():
-                            if cust_id == innerval['customer_id']:
-                                trans_to_delete.append(innerkey)
+                for key, value in sales_data.items():
+                    if cust_id == value['customer_id']:
+                        trans_to_delete.append(key)
+                
                 for i in trans_to_delete:
                     print(f"\n{Loaded_records['sales_records'][i]}\ntransaction deleted")  
                     del Loaded_records['sales_records'][i]             
@@ -496,6 +474,20 @@ def print_dict(dictionary, num_lines):
                     
     return
 
+def csv_writer(filepath, data, header):
+    ''' This function is specifically made to be used by the save records function. It does the
+    actual writing to the csv files while save records just works through the many possibilities. '''
+    
+    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
+        writer = csv.writer(file)
+        writer.writerow(header)
+        row = []
+        for value in data.values():
+            for innervalue in value.values():
+                row.append(innervalue)
+            writer.writerow(row)
+            row = []
+
 def save_records(Loaded_records, record, header):
     ''' This function helps us save records to files. It takes 3 parameters, the dicionary, record,
     which according to chosen option in main program can be customer records or sales record and
@@ -504,6 +496,8 @@ def save_records(Loaded_records, record, header):
     overwrite if file exists or writes directly if file doesnt exist. It can accept both filename or filepath.
     It uses generalisation so that it can be called by both option 2 and 3 and deliver results accordingly.
     Note: if not dict is checked in function option2()'''
+        
+    data = Loaded_records.get(record, {})
     
     filepath = input(f"\nplease provide a filepath or filename where you want to save {record}: ")
     current_dir = os.getcwd()
@@ -513,85 +507,36 @@ def save_records(Loaded_records, record, header):
             if os.path.exists(filepath):
                 overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
                 if overwrite.upper() == "Y" or overwrite == "":
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")           
+                    csv_writer(filepath, data, header)
+                    print("\nwrite complete")           
                                     
                 else:
                     print("ok")
+                    
             else:
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                    writer.writerow(row)
-                                    row = []
-                        print("\nwrite complete")
+                csv_writer(filepath, data, header)
+                print("\nwrite complete")
                                     
         elif "\\" in current_dir:   
             filepath = current_dir + "\\" + filepath
             if os.path.exists(filepath):
                 overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
                 if overwrite.upper() == "Y" or overwrite == "":
-                    with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                writer.writerow(row)
-                                row = []
-                        print("\nwrite complete")
+                    csv_writer(filepath, data, header)
+                    print("\nwrite complete")
                                     
                 else:
                     print("ok")
             else:
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                        writer = csv.writer(file)
-                        writer.writerow(header)
-                        row = []
-                        for key, value in Loaded_records.items():
-                            if key == record:
-                                for innerkey, innerval in value.items():
-                                    for deepkey, deepval in innerval.items():
-                                        row.append(deepval)
-                                writer.writerow(row)
-                                row = []
-                        print("\nwrite complete")   
+                csv_writer(filepath, data, header)
+                print("\nwrite complete")  
                                     
     else:
         if os.path.exists(filepath):
             overwrite = input("\nThe file already exists, do you want to overwrite [Y/N]")
             if overwrite.upper() == "Y" or overwrite == "":
-                with open(filepath, "w+", newline="", encoding="utf-8-sig") as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
-                    row = []
-                    for key, value in Loaded_records.items():
-                        if key == record:
-                            for innerkey, innerval in value.items():
-                                for deepkey, deepval in innerval.items():
-                                    row.append(deepval)
-                            writer.writerow(row)
-                            row = []
-                    print("\nwrite complete")
+                csv_writer(filepath, data, header)
+                print("\nwrite complete")
                     
             else:
                 print("ok")

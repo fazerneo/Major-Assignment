@@ -29,7 +29,8 @@ def option11(loaded_records):
     plt.xlabel("Month")
     plt.ylabel("Sales")
     plt.title("Monthly Sales")
-    plt.grid(True)
+    
+    plt.yticks(np.arange(0, monthly_sales.max()+2000, 2000))
     plt.xticks(x, Months)
     plt.tight_layout()
     plt.show()

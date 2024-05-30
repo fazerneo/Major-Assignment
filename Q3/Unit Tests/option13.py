@@ -1,38 +1,45 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def option12(loaded_records):
+def option13(loaded_records):
     """ This function takes loaded_records as it's parameter, notes monthly sales and number of sales
     using an ndarray to store data according to month and plots a two line graph on one axis
-    to visualize monthly sales value of the customer and number of sales of the customer. """
+    to visualize monthly sales value and number of sales of all the customers in a given postcode. """
     
-    print("\nCustomer Sales Overview")
-    customer_ids = []
+    print("\nPostCode Sales Overview")
+    postcodes = []
     customer_data = loaded_records.get("customer_records", {})
     print(customer_data)
-    [customer_ids.append(value['cust_id']) for value in customer_data.values()]
+    [postcodes.append(value['postcode']) for value in customer_data.values()]
+    print(postcodes)
     
     sales_data = loaded_records.get("sales_records", {})
 
     monthly_sales = np.zeros(12) 
     number_sales = np.zeros(12)
     
+    customers_in_postcode = []
+    
     plot = False
-    customer_id = "100002" #try 100001
-    if customer_id != "":
-        if customer_id in customer_ids:
-            for value in sales_data.values():
-                if customer_id in value["customer_id"]:
-                    plot = True
-                    month = int(value['date'].split("-")[1]) - 1
-                    sales = value['value']
-                    
-                    monthly_sales[month] += sales
-                    number_sales[month] += 1
-                    print(monthly_sales)
+    postcode = input("\nPlease enter postcode: ")
+    if postcodes != "":
+        if postcode in postcodes:
+            customers_in_postcode = [value["cust_id"] for value in customer_data.values() if value['postcode'] == postcode]
+            print(customers_in_postcode)
+            filtered_sales = [value for value in sales_data.values() if value["customer_id"] in customers_in_postcode]
+            
+            for value in filtered_sales:
+                
+                plot = True
+                month = int(value['date'].split("-")[1]) - 1
+                sales = value['value']
+                monthly_sales[month] += sales
+                number_sales[month] += 1
+                print(monthly_sales)
         
             if plot:       
                 Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        
                 x = np.arange(1, 13)
                 
                 fig, ax1 = plt.subplots(figsize=(12, 12))
@@ -41,29 +48,34 @@ def option12(loaded_records):
 
                 ax1.set_xlabel("Month")
                 ax1.set_ylabel("Sales")
-                ax1.set_yticks(np.arange(0, monthly_sales.max()+2000, 2000))
-                plt.title(f"Monthly Sales and Number of Sales for Customer {customer_id}")
+
+                ax1.set_yticks(monthly_sales) # make each step an average of last step. also edit option 12
+                plt.title(f"Monthly Sales and Number of Sales for Postcode {postcode}")
                 plt.xticks(x, Months)
+                ax1.set_yticks(np.arange(0, monthly_sales.max()+2000, 2000))
 
                 ax2 = ax1.twinx()
                 
                 plot2 = ax2.plot(x, number_sales,'b*--', label="Number of Sales", )
-                ax2.set_yticks(number_sales+1)
+                
+                maxSales = number_sales.max()
+                ax2.set_yticks(np.arange(0, maxSales + 2))
                 ax2.set_ylabel("Number of sales")
                 
                 lines1, labels1 = ax1.get_legend_handles_labels()
                 lines2, labels2 = ax2.get_legend_handles_labels()
                 plt.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
+                
                 plt.show()        
             
             else:
-                print("No customer transactions found")
+                print("No customer transactions found for the postcode")
             
         else:
-            print("Customer ID does not exist")
+            print("Postcode does not exist")
     
     else:
-        print("Error: Customer id should not be blank")
+        print("Error: postcode should not be blank") 
     
 
 
@@ -86,4 +98,4 @@ loaded_records = {
     }
 }
 
-option12(loaded_records)
+option13(loaded_records)
