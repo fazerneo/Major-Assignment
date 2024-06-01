@@ -44,8 +44,6 @@ def option1(dictionary):
             dictionary['sales_records'] = sales
         else:
             print()
-            print("Records")
-            print(dictionary)
     
     return dictionary
 
@@ -94,62 +92,60 @@ def load_records():
     customers = {}
     sales = {}
 
-    file1_name = input("\nplease provide the filename or filepath of customer records:")
-    
     while True:
+        file1_name = input("\nplease provide the filename or filepath of customer records:")
+        if file1_name != "":
+            if "/" not in file1_name or "\\" not in file1_name: # if user enters filename instead of path
+                current_dir = os.getcwd()
+                if "/" in current_dir: # if users are using Linux, Mac or other unix like OS
+                    file1_name = current_dir + "/" + file1_name
+                    if os.path.exists(file1_name):
+                        break
+                    else:
+                        print("\nThe customer records filename or filepath you provided is not valid")
+                        file1_name = input("\nplease provide a valid filename or filepath: ")
+                elif "\\" in current_dir: # if users are using windows
+                    file1_name = current_dir + "\\" + file1_name
+                    if os.path.exists(file1_name):
+                        break
+                    else:
+                        print("\nThe customers record filename or filepath you provided is not valid")
+
+                        file1_name = input("\nplease provide a valid filename or filepath: ")   
         
-        if "/" not in file1_name or "\\" not in file1_name: # if user enters filename instead of path
-            current_dir = os.getcwd()
-            if "/" in current_dir: # if users are using Linux, Mac or other unix like OS
-                file1_name = current_dir + "/" + file1_name
-                if os.path.exists(file1_name):
-                    break
-                else:
-                    print("\nThe customer records filename or filepath you provided is not valid")
-                    file1_name = input("\nplease provide a valid filename or filepath: ")
-            elif "\\" in current_dir: # if users are using windows
-                file1_name = current_dir + "\\" + file1_name
+            else: # if user enters path instead of filename
                 if os.path.exists(file1_name):
                     break
                 else:
                     print("\nThe customers record filename or filepath you provided is not valid")
+                    file1_name = input("\nplease provide a valid filename or filepath: ")
 
-                    file1_name = input("\nplease provide a valid filename or filepath: ")   
-        
-        else: # if user enters path instead of filename
-            if os.path.exists(file1_name):
-                break
-            else:
-                print("\nThe customers record filename or filepath you provided is not valid")
-                file1_name = input("\nplease provide a valid filename or filepath: ")
-
-    file2_name = input("please provide the filename or filepath of Sales record:")    
-    
     while True:
-        
-        if "/" not in file2_name or "\\" not in file2_name:
-            current_dir = os.getcwd()
-            if "/" in current_dir:
-                file2_name = current_dir + "/" + file2_name
-                if os.path.exists(file2_name):
-                    break
-                else:
-                    print("\nThe sales record filename or filepath you provided is not valid")
-                    file2_name = input("\nplease provide a valid filename or filepath: ")
-            elif "\\" in current_dir:
-                file2_name = current_dir + "\\" + file2_name
-                if os.path.exists(file2_name):
-                    break
-                else:
-                    print("\nThe sales record filename or filepath you provided is not valid")
-                    file2_name = input("\nplease provide a valid filename or filepath: ")
-            
-        else:
-            if os.path.exists(file2_name):
-                break
+        file2_name = input("please provide the filename or filepath of Sales record:")   
+        if file2_name != "":
+            if "/" not in file2_name or "\\" not in file2_name:
+                current_dir = os.getcwd()
+                if "/" in current_dir:
+                    file2_name = current_dir + "/" + file2_name
+                    if os.path.exists(file2_name):
+                        break
+                    else:
+                        print("\nThe sales record filename or filepath you provided is not valid")
+                        file2_name = input("\nplease provide a valid filename or filepath: ")
+                elif "\\" in current_dir:
+                    file2_name = current_dir + "\\" + file2_name
+                    if os.path.exists(file2_name):
+                        break
+                    else:
+                        print("\nThe sales record filename or filepath you provided is not valid")
+                        file2_name = input("\nplease provide a valid filename or filepath: ")
+                
             else:
-                print("\nThe sales record filename or filepath you provided is not valid")
-                file2_name = input("\nplease provide a valid filename or filepath: ")
+                if os.path.exists(file2_name):
+                    break
+                else:
+                    print("\nThe sales record filename or filepath you provided is not valid")
+                    file2_name = input("\nplease provide a valid filename or filepath: ")
         
     with open(file1_name, newline="", encoding="utf-8-sig") as file1, open(file2_name, newline="", encoding="utf-8-sig") as file2:
         reader1 = csv.DictReader(file1)
@@ -179,7 +175,6 @@ def print_dict(dictionary, num_lines):
     num_lines acts like head command and tha number of records is printed. '''
     
     count = num_lines # I set a count here to act like head
-    count = int(count)
     
     print()
     print("Loaded Records")
@@ -281,4 +276,3 @@ def save_records(Loaded_records, record, header):
                 print("ok")
 
     return
-

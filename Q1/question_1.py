@@ -11,7 +11,7 @@ while True:
     # a head like function is passed to only print a few number of lines to not overload console
     if user_input == 1:
         Loaded_records = option1(Loaded_records)
-        head = input("\nEnter the number of records you want to print for each record.\nThis will ensure large data records dont overload our console: ")
+        head = int(input("\nEnter the number of records you want to print for each record.\nThis will ensure large data records dont overload our console: "))
         print_dict(Loaded_records, head)
     
     # if user input is 2, option2 func is passed with the global dict

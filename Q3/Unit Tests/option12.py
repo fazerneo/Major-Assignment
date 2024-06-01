@@ -10,6 +10,7 @@ def option12(loaded_records):
     customer_ids = []
     customer_data = loaded_records.get("customer_records", {})
     print(customer_data)
+    
     [customer_ids.append(value['cust_id']) for value in customer_data.values()]
     
     sales_data = loaded_records.get("sales_records", {})
@@ -18,7 +19,7 @@ def option12(loaded_records):
     number_sales = np.zeros(12)
     
     plot = False
-    customer_id = "100002" #try 100001
+    customer_id = "100001" #try 100001
     if customer_id != "":
         if customer_id in customer_ids:
             for value in sales_data.values():
@@ -41,7 +42,10 @@ def option12(loaded_records):
 
                 ax1.set_xlabel("Month")
                 ax1.set_ylabel("Sales")
-                ax1.set_yticks(np.arange(0, monthly_sales.max()+2000, 2000))
+                sales_max = monthly_sales.max()
+                step = round(sales_max * 0.1, -3)
+    
+                ax1.set_yticks(np.arange(0, sales_max + step, step))
                 plt.title(f"Monthly Sales and Number of Sales for Customer {customer_id}")
                 plt.xticks(x, Months)
 

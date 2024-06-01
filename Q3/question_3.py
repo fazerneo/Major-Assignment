@@ -1,3 +1,5 @@
+from functions_1 import *
+from functions_2 import *
 from functions_3 import *
 
 # empty global dictionary
@@ -11,7 +13,7 @@ while True:
     # a head like function is passed to only print a few number of lines to not overload console
     if user_input == 1:
         Loaded_records = option1(Loaded_records)
-        head = input("\nEnter the number of records you want to print for each record.\nThis will ensure large data records dont overload our console: ")
+        head = int(input("\nEnter the number of records you want to print for each record.\nThis will ensure large data records dont overload our console: "))
         print_dict(Loaded_records, head)
     
     # if user input is 2, option2 func is passed with the global dict
@@ -52,14 +54,17 @@ while True:
     elif user_input == 10:  
         Loaded_records = option10(Loaded_records)
     
+    # View total monthly sales in a line graph
     elif user_input == 11:  
-        Loaded_records = option11(Loaded_records)
-        
+        option11(Loaded_records)
+    
+    # enter a customer id and view monthly sales value and number     
     elif user_input == 12:  
-        Loaded_records = option12(Loaded_records)
+        option12(Loaded_records)
         
+    # enter a postcode and view monthly sales value and number of all customers in the postcode.    
     elif user_input == 13:  
-        Loaded_records = option13(Loaded_records)
+        option13(Loaded_records)
     
     # if user input is 14, we exit the looping menu
     elif user_input == 14:
