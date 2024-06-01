@@ -1,5 +1,3 @@
-import csv
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -36,24 +34,28 @@ def option11(loaded_records):
         print("\nThere are no sales records to view.")
 
     monthly_sales = np.zeros(12) 
+    number_sales = np.zeros(12)
+    
+    plot = False
     
     for value in sales_data.values():
-        month = int(value['date'].split("-")[1])-1
+        month = int(value['date'].split("-")[1]) - 1
         sales = float(value['value'])
         
         monthly_sales[month] += sales
-    
+        number_sales[month] += 1
+        
     Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     x = np.arange(1, 13)
     
-    plt.figure(figsize=(10, 8))
-    plt.plot(x, monthly_sales, marker='o')
-    plt.xlabel("Month")
-    plt.ylabel("Sales")
-    plt.title("Monthly Sales")
-    plt.xticks(x, Months)
-    
+    fig, ax1 = plt.subplots(figsize=(12, 12))
+                    
+    plot1 = ax1.plot(x, monthly_sales, 'go-', label="Monthly Sales")
+
+    ax1.set_xlabel("Month")
+    ax1.set_ylabel("Sales")
     sales_max = monthly_sales.max()
+
     if sales_max != 0:
         step = round(sales_max * 0.1, -3)  
         if step == 0:
@@ -61,8 +63,20 @@ def option11(loaded_records):
 
     else:
         step = 1000  
-    plt.yticks(np.arange(0, sales_max + step, step))
-    plt.show()
+    ax1.set_yticks(np.arange(0, sales_max + step, step))
+    plt.title(f"Monthly Sales and Number of Sales")
+    plt.xticks(x, Months)
+
+    ax2 = ax1.twinx()
+    
+    plot2 = ax2.plot(x, number_sales,'b*--', label="Number of Sales", )
+    ax2.set_yticks(number_sales+1)
+    ax2.set_ylabel("Number of sales")
+    
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    plt.legend(lines1 + lines2, labels1 + labels2, loc='best')
+    plt.show()                      
 
 def option12(loaded_records):
     """ This function takes loaded_records as it's parameter, notes monthly sales and number of sales
